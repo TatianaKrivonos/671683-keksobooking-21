@@ -44,12 +44,12 @@
   const renderAdd = (add) => {
     const addElement = similarAddTemplate.cloneNode(true);
     addElement.style = `left: ${add.location.x + PIN_WIDTH}px; top: ${add.location.y + PIN_HEIGHT}px;`;
-    addElement.querySelector('img').src = add.author.avatar;
-    addElement.querySelector('img').alt = add.offer.title;
+    addElement.querySelector(`img`).src = add.author.avatar;
+    addElement.querySelector(`img`).alt = add.offer.title;
     return addElement;
   };
 
-  map.classList.remove('map--faded');
+  map.classList.remove(`map--faded`);
 
   createAdds(8).forEach((add) => fragment.appendChild(renderAdd(add)));
   similarAddElement.appendChild(fragment);
