@@ -12,13 +12,13 @@
 
   const fragment = document.createDocumentFragment();
   const map = document.querySelector(`.map`);
-  const similarAddElement = map.querySelector(`.map__pins`);
-  const similarAddTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+  const similarAdElement = map.querySelector(`.map__pins`);
+  const similarAdTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const getRandomNum = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
   const getRandomEl = (list) => list[getRandomNum(0, list.length - 1)];
 
-  const createAdds = (amount) => Array.from({length: amount}, (_, i) => ({
+  const createAds = (amount) => Array.from({length: amount}, (_, i) => ({
     author: {
       avatar: `img/avatars/user0${i + 1}.png`,
     },
@@ -41,16 +41,19 @@
     }
   }));
 
-  const renderAdd = (add) => {
-    const addElement = similarAddTemplate.cloneNode(true);
-    addElement.style = `left: ${add.location.x + PIN_WIDTH}px; top: ${add.location.y + PIN_HEIGHT}px;`;
-    addElement.querySelector(`img`).src = add.author.avatar;
-    addElement.querySelector(`img`).alt = add.offer.title;
-    return addElement;
+  const renderAd = (ad) => {
+    const adElement = similarAdTemplate.cloneNode(true);
+    adElement.style = `left: ${ad.location.x + PIN_WIDTH}px; top: ${ad.location.y + PIN_HEIGHT}px;`;
+
+    const adImg = adElement.querySelector(`img`);
+    adImg.src = ad.author.avatar;
+    adImg.alt = ad.offer.title;
+
+    return adElement;
   };
 
   map.classList.remove(`map--faded`);
 
-  createAdds(8).forEach((add) => fragment.appendChild(renderAdd(add)));
-  similarAddElement.appendChild(fragment);
+  createAds(8).forEach((ad) => fragment.appendChild(renderAd(ad)));
+  similarAdElement.appendChild(fragment);
 })();
