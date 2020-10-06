@@ -10,26 +10,26 @@
 
   const map = document.querySelector(`.map`);
 
-  const createAds = (amount) => Array.from({length: amount}, (_, i) => ({
+  const createAds = (amount) => Array.from({length: amount}, (item, i) => ({
     author: {
       avatar: `img/avatars/user0${i + 1}.png`,
     },
     offer: {
       title: `title${i + 1}`,
-      address: `${window.random.getRandomNum(0, 1000)}, ${window.random.getRandomNum(0, 1000)}`,
-      price: window.random.getRandomNum(1000, 50000),
-      type: window.random.getRandomEl(TYPES),
-      rooms: window.random.getRandomNum(1, ROOMS),
-      guests: window.random.getRandomEl(GUESTS),
-      checkin: window.random.getRandomEl(CHECKIN_TIME),
-      checkout: window.random.getRandomEl(CHECKOUT_TIME),
-      features: window.random.getRandomArr(FEATURES),
+      address: `${window.random.getNum(0, 1000)}, ${window.random.getNum(0, 1000)}`,
+      price: window.random.getNum(1000, 50000),
+      type: window.random.getEl(TYPES),
+      rooms: window.random.getNum(1, ROOMS),
+      guests: window.random.getEl(GUESTS),
+      checkin: window.random.getEl(CHECKIN_TIME),
+      checkout: window.random.getEl(CHECKOUT_TIME),
+      features: window.random.getArr(FEATURES),
       description: `description${i + 1}`,
-      photos: window.random.getRandomArr(PHOTOS)
+      photos: window.random.getArr(PHOTOS)
     },
     location: {
-      x: window.random.getRandomNum(0, map.clientWidth),
-      y: window.random.getRandomNum(130, 630)
+      x: window.random.getNum(0, map.clientWidth),
+      y: window.random.getNum(130, 630)
     }
   }));
 

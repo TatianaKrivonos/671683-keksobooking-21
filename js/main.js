@@ -25,12 +25,12 @@
   const activatePage = () => {
     map.classList.remove(`map--faded`);
     adForm.classList.remove(`ad-form--disabled`);
-    window.util.setDisableFalse(adFormFieldsets);
-    window.util.setDisableFalse(filtersFormSelects);
+    window.util.setDisable(adFormFieldsets, false);
+    window.util.setDisable(filtersFormSelects, false);
   };
 
-  window.util.setDisableTrue(adFormFieldsets);
-  window.util.setDisableTrue(filtersFormSelects);
+  window.util.setDisable(adFormFieldsets, true);
+  window.util.setDisable(filtersFormSelects, true);
   window.form.renderCapacityList(adFormSelectRooms.value);
 
   adFormInputAddress.value = `${mainPinX + Math.floor(MAIN_PIN_WIDTH / 2)}, ${mainPinY + Math.floor(MAIN_PIN_HEIGHT / 2)}`;

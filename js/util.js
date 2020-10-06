@@ -1,20 +1,13 @@
 'use strict';
 (function () {
 
-  const setDisableTrue = (arr) => {
+  const setDisable = (arr, boolean) => {
     arr.forEach((el) => {
-      el.disabled = true;
-    });
-  };
-
-  const setDisableFalse = (arr) => {
-    arr.forEach((el) => {
-      el.disabled = false;
+      el.disabled = boolean;
     });
   };
 
   window.util = {
-    setDisableTrue,
-    setDisableFalse,
+    setDisable,
   };
 })();

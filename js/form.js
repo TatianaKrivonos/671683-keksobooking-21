@@ -2,6 +2,7 @@
 (function () {
   const adForm = document.querySelector(`.ad-form`);
   const adFormSelectCapacity = adForm.querySelector(`select[name = capacity]`);
+  const fragment = document.createDocumentFragment();
 
   const createOption = (text) => {
     const option = document.createElement(`option`);
@@ -19,8 +20,9 @@
   const renderCapacityList = (roomsNum) => {
     adFormSelectCapacity.innerHTML = ``;
     capacityMap[roomsNum].forEach((el) => {
-      adFormSelectCapacity.appendChild(createOption(el));
+      fragment.appendChild(createOption(el));
     });
+    adFormSelectCapacity.appendChild(fragment);
   };
 
   window.form = {
