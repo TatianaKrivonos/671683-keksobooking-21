@@ -8,7 +8,6 @@
   const map = document.querySelector(`.map`);
   const mainPin = map.querySelector(`.map__pin--main`);
   const similarAdElement = map.querySelector(`.map__pins`);
-  const mapFiltersContainer = map.querySelector(`.map__filters-container`);
   const adForm = document.querySelector(`.ad-form`);
   const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
   const adFormInputAddress = adForm.querySelector(`input[name = address]`);
