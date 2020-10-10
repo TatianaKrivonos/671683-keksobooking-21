@@ -86,7 +86,6 @@
   similarAds.forEach((ad, i) => {
     const pin = window.pin.renderAd(ad);
     const popup = window.card.renderAdPopup(similarAds[i]);
-    popup.tabIndex = 0;
     const closeCard = popup.querySelector(`.popup__close`);
     fragment.appendChild(pin);
 
@@ -104,7 +103,7 @@
       window.card.closePopup(popup);
     });
 
-    popup.addEventListener(`keydown`, (evt) => {
+    document.addEventListener(`keydown`, (evt) => {
       if (evt.key === `Escape`) {
         window.card.closePopup(popup);
       }

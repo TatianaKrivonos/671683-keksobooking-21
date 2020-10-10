@@ -39,6 +39,13 @@
     return adPopup;
   };
 
+  const onPopupEscPress = function (evt) {
+    if (evt.key === `Escape`) {
+      evt.preventDefault();
+      closePopup();
+    }
+  };
+
   const openPopup = (popup) => {
     const mapCard = map.querySelector(`.map__card`);
     if (mapCard) {
@@ -50,6 +57,7 @@
 
   const closePopup = (popup) => {
     popup.remove();
+    document.removeEventListener(`keydown`, onPopupEscPress);
   };
 
   window.card = {

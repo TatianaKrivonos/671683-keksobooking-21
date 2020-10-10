@@ -37,7 +37,7 @@
   const getPrice = (type) => {
     adFormInputPrice.min = priceMap[type];
     adFormInputPrice.max = 1000000;
-    adFormInputPrice.value = priceMap[type];
+    adFormInputPrice.placeholder = priceMap[type];
   };
 
   const synchronizeSelects = (select, val) => {
