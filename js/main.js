@@ -102,12 +102,6 @@
     closeCard.addEventListener(`click`, () => {
       window.card.closePopup(popup);
     });
-
-    document.addEventListener(`keydown`, (evt) => {
-      if (evt.key === `Escape`) {
-        window.card.closePopup(popup);
-      }
-    });
   });
 
   similarAdElement.appendChild(fragment);

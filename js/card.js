@@ -39,10 +39,11 @@
     return adPopup;
   };
 
-  const onPopupEscPress = function (evt) {
+  const createEscHandler = (popup) => function onPopupEscPress(evt) {
     if (evt.key === `Escape`) {
       evt.preventDefault();
-      closePopup();
+      closePopup(popup);
+      document.removeEventListener(`keydown`, onPopupEscPress);
     }
   };
 
@@ -53,11 +54,11 @@
     }
     fragment.appendChild(popup);
     map.insertBefore(fragment, mapFiltersContainer);
+    document.addEventListener(`keydown`, createEscHandler(popup));
   };
 
   const closePopup = (popup) => {
     popup.remove();
-    document.removeEventListener(`keydown`, onPopupEscPress);
   };
 
   window.card = {
