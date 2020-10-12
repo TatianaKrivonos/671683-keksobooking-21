@@ -1,7 +1,9 @@
 'use strict';
 (function () {
+
   const adForm = document.querySelector(`.ad-form`);
   const adFormSelectCapacity = adForm.querySelector(`select[name = capacity]`);
+  const adFormInputPrice = adForm.querySelector(`input[name = price]`);
   const fragment = document.createDocumentFragment();
 
   const createOption = (text) => {
@@ -17,6 +19,13 @@
     100: [`не для гостей`]
   };
 
+  const priceMap = {
+    "bungalow": 0,
+    "flat": 1000,
+    "house": 5000,
+    "palace": 10000
+  };
+
   const renderCapacityList = (roomsNum) => {
     adFormSelectCapacity.innerHTML = ``;
     capacityMap[roomsNum].forEach((el) => {
@@ -25,7 +34,32 @@
     adFormSelectCapacity.appendChild(fragment);
   };
 
+  const getPrice = (type) => {
+    adFormInputPrice.min = priceMap[type];
+    adFormInputPrice.max = 1000000;
+    adFormInputPrice.placeholder = priceMap[type];
+  };
+
+  const synchronizeSelects = (select, val) => {
+    select.selectedIndex = [...select].findIndex((el) => el.value === val);
+  };
+
+  const validateTextInput = (input, minLength, maxLength) => {
+    const valueLength = input.value.length;
+    if (valueLength < minLength) {
+      input.setCustomValidity(`Ещё ` + (minLength - valueLength) + ` символов`);
+    } else if (valueLength > maxLength) {
+      input.setCustomValidity(`Удалите лишние ` + (valueLength - maxLength) + ` символов`);
+    } else {
+      input.setCustomValidity(``);
+    }
+    input.reportValidity();
+  };
+
   window.form = {
     renderCapacityList,
+    getPrice,
+    synchronizeSelects,
+    validateTextInput,
   };
 })();
