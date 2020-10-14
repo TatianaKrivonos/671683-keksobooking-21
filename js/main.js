@@ -3,6 +3,7 @@
   const MAIN_PIN_WIDTH = 65;
   const MAIN_PIN_HEIGHT = 65;
   const MAIN_PIN_HEIGHT_ACTIVE = 87;
+  const MAX_SIMILAR_AD_COUNT = 8;
 
   const fragment = document.createDocumentFragment();
   const map = document.querySelector(`.map`);
@@ -30,6 +31,7 @@
     adForm.classList.remove(`ad-form--disabled`);
     window.util.setDisable(adFormFieldsets, false);
     window.util.setDisable(filtersFormSelects, false);
+    window.load.getData(onSuccess, onError);
   };
 
   window.util.setDisable(adFormFieldsets, true);
@@ -81,29 +83,40 @@
     window.form.synchronizeSelects(adFormSelectTimeIn, selectedValue);
   });
 
-  const similarAds = window.data.createAds(8);
+  const onSuccess = (ads) => {
 
-  similarAds.forEach((ad, i) => {
-    const pin = window.pin.renderAd(ad);
-    const popup = window.card.renderAdPopup(similarAds[i]);
-    const closeCard = popup.querySelector(`.popup__close`);
-    fragment.appendChild(pin);
-
-    pin.addEventListener(`click`, () => {
-      window.card.openPopup(popup);
-    });
-
-    pin.addEventListener(`keydown`, (evt) => {
-      if (evt.key === `Enter`) {
+    for (let i = 0; i < MAX_SIMILAR_AD_COUNT; i++) {
+      const pin = window.pin.renderAd(ads[i]);
+      const popup = window.card.renderAdPopup(ads[i]);
+      const closeCard = popup.querySelector(`.popup__close`);
+      fragment.appendChild(pin);
+      pin.addEventListener(`click`, () => {
         window.card.openPopup(popup);
-      }
-    });
+      });
 
-    closeCard.addEventListener(`click`, () => {
-      window.card.closePopup(popup);
-    });
-  });
+      pin.addEventListener(`keydown`, (evt) => {
+        if (evt.key === `Enter`) {
+          window.card.openPopup(popup);
+        }
+      });
 
-  similarAdElement.appendChild(fragment);
+      closeCard.addEventListener(`click`, () => {
+        window.card.closePopup(popup);
+      });
+    }
+
+    similarAdElement.appendChild(fragment);
+  };
+
+  const onError = (errorMessage) => {
+    const node = document.createElement(`div`);
+    node.style = `z-index: 100; padding: 15px 0; width: 100%; text-align: center; color: #FFFFFF; background-color: rgb(255, 36, 0);`;
+    node.style.position = `fixed`;
+    node.style.left = 0;
+    node.style.top = 0;
+    node.style.fontSize = `28px`;
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
 
 })();
