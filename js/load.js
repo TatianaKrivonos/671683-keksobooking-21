@@ -6,7 +6,7 @@
   };
   const TIMEOUT_IN_MS = 5000;
 
-  const loadData = (onSuccess, onError) => {
+  const getData = (onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
@@ -31,6 +31,6 @@
   };
 
   window.load = {
-    loadData
+    getData
   };
 })();

@@ -31,6 +31,7 @@
     adForm.classList.remove(`ad-form--disabled`);
     window.util.setDisable(adFormFieldsets, false);
     window.util.setDisable(filtersFormSelects, false);
+    window.load.getData(onSuccess, onError);
   };
 
   window.util.setDisable(adFormFieldsets, true);
@@ -82,7 +83,7 @@
     window.form.synchronizeSelects(adFormSelectTimeIn, selectedValue);
   });
 
-  const successHandler = (ads) => {
+  const onSuccess = (ads) => {
 
     for (let i = 0; i < MAX_SIMILAR_AD_COUNT; i++) {
       const pin = window.pin.renderAd(ads[i]);
@@ -107,7 +108,7 @@
     similarAdElement.appendChild(fragment);
   };
 
-  const errorHandler = (errorMessage) => {
+  const onError = (errorMessage) => {
     const node = document.createElement(`div`);
     node.style = `z-index: 100; padding: 15px 0; width: 100%; text-align: center; color: #FFFFFF; background-color: rgb(255, 36, 0);`;
     node.style.position = `fixed`;
@@ -117,7 +118,5 @@
     node.textContent = errorMessage;
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
-
-  window.load.loadData(successHandler, errorHandler);
 
 })();
