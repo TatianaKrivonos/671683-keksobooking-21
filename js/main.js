@@ -98,7 +98,6 @@
   housingTypeSelector.addEventListener(`change`, () => {
     const newHousingType = housingTypeSelector.value;
     housingType = newHousingType;
-
     updateAds();
     const popup = document.querySelector(`.map__card`);
     if (popup) {
