@@ -3,12 +3,9 @@
   const MAIN_PIN_WIDTH = 65;
   const MAIN_PIN_HEIGHT = 65;
   const MAIN_PIN_HEIGHT_ACTIVE = 87;
-  const MAX_SIMILAR_AD_COUNT = 8;
 
-  const fragment = document.createDocumentFragment();
   const map = document.querySelector(`.map`);
   const mainPin = map.querySelector(`.map__pin--main`);
-  const similarAdElement = map.querySelector(`.map__pins`);
   const adForm = document.querySelector(`.ad-form`);
   const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
   const adFormInputAddress = adForm.querySelector(`input[name = address]`);
@@ -19,6 +16,7 @@
   const adFormSelectTimeOut = adForm.querySelector(`select[name = timeout]`);
   const filtersForm = document.querySelector(`.map__filters`);
   const filtersFormSelects = filtersForm.querySelectorAll(`select`);
+  const housingTypeSelector = filtersForm.querySelector(`select[name = housing-type]`);
   const mainPinX = +mainPin.style.left.replace(`px`, ``);
   const mainPinY = +mainPin.style.top.replace(`px`, ``);
 
@@ -83,29 +81,33 @@
     window.form.synchronizeSelects(adFormSelectTimeIn, selectedValue);
   });
 
-  const onSuccess = (ads) => {
+  let housingType = `any`;
+  let ads = [];
 
-    for (let i = 0; i < MAX_SIMILAR_AD_COUNT; i++) {
-      const pin = window.pin.renderAd(ads[i]);
-      const popup = window.card.renderAdPopup(ads[i]);
-      const closeCard = popup.querySelector(`.popup__close`);
-      fragment.appendChild(pin);
-      pin.addEventListener(`click`, () => {
-        window.card.openPopup(popup);
-      });
+  const updateAds = () => {
+    const sameHousingTypes = ads.filter((ad) => {
+      return ad.offer.type === housingType;
+    });
+    const filteredAds = sameHousingTypes.concat(ads);
+    const uniqueAds = filteredAds.filter((ad, index) => {
+      return filteredAds.indexOf(ad) === index;
+    });
+    window.render.createAd(uniqueAds);
+  };
 
-      pin.addEventListener(`keydown`, (evt) => {
-        if (evt.key === `Enter`) {
-          window.card.openPopup(popup);
-        }
-      });
-
-      closeCard.addEventListener(`click`, () => {
-        window.card.closePopup(popup);
-      });
+  housingTypeSelector.addEventListener(`change`, () => {
+    const newHousingType = housingTypeSelector.value;
+    housingType = newHousingType;
+    updateAds();
+    const popup = document.querySelector(`.map__card`);
+    if (popup) {
+      window.card.closePopup(popup);
     }
+  });
 
-    similarAdElement.appendChild(fragment);
+  const onSuccess = (data) => {
+    ads = data;
+    updateAds();
   };
 
   const onError = (errorMessage) => {
