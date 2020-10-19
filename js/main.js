@@ -60,12 +60,12 @@
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
       onMouseMove(upEvt);
-      map.removeEventListener(`mousemove`, onMouseMove);
-      map.removeEventListener(`mouseup`, onMouseUp);
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
     };
 
-    map.addEventListener(`mousemove`, onMouseMove);
-    map.addEventListener(`mouseup`, onMouseUp);
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
 
     if (evt.which === 1) {
       activatePage();
