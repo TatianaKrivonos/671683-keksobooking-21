@@ -1,14 +1,11 @@
 'use strict';
 (function () {
-  const MAIN_PIN_WIDTH = 65;
   const MAIN_PIN_HEIGHT = 65;
   const MAIN_PIN_HEIGHT_ACTIVE = 87;
-
   const map = document.querySelector(`.map`);
   const mainPin = map.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
   const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
-  const adFormInputAddress = adForm.querySelector(`input[name = address]`);
   const adFormInputTitle = adForm.querySelector(`input[name = title]`);
   const adFormSelectRooms = adForm.querySelector(`select[name = rooms]`);
   const adFormSelectTypes = adForm.querySelector(`select[name = type]`);
@@ -17,12 +14,8 @@
   const filtersForm = document.querySelector(`.map__filters`);
   const filtersFormSelects = filtersForm.querySelectorAll(`select`);
   const housingTypeSelector = filtersForm.querySelector(`select[name = housing-type]`);
-  const mainPinX = +mainPin.style.left.replace(`px`, ``);
-  const mainPinY = +mainPin.style.top.replace(`px`, ``);
-
-  const getNewMainPinAddress = () => {
-    adFormInputAddress.value = `${mainPinX + Math.floor(MAIN_PIN_WIDTH / 2)}, ${mainPinY + MAIN_PIN_HEIGHT_ACTIVE}`;
-  };
+  let mainPinX = mainPin.offsetLeft;
+  let mainPinY = mainPin.offsetTop;
 
   const activatePage = () => {
     map.classList.remove(`map--faded`);
@@ -36,20 +29,54 @@
   window.util.setDisable(filtersFormSelects, true);
   window.form.renderCapacityList(adFormSelectRooms.value);
   window.form.getPrice(adFormSelectTypes.value);
-
-  adFormInputAddress.value = `${mainPinX + Math.floor(MAIN_PIN_WIDTH / 2)}, ${mainPinY + Math.floor(MAIN_PIN_HEIGHT / 2)}`;
+  window.util.getNewMainPinAddress(mainPinX, mainPinY, MAIN_PIN_HEIGHT);
 
   mainPin.addEventListener(`mousedown`, (evt) => {
+    evt.preventDefault();
+    let startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    const onMouseMove = (moveEvt) => {
+      moveEvt.preventDefault();
+
+      const shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      mainPinX = mainPin.offsetLeft;
+      mainPinY = mainPin.offsetTop;
+
+      window.move.getNewLocation(mainPinX - shift.x, mainPinY - shift.y);
+    };
+
+    const onMouseUp = (upEvt) => {
+      upEvt.preventDefault();
+      onMouseMove(upEvt);
+      document.removeEventListener(`mousemove`, onMouseMove);
+      document.removeEventListener(`mouseup`, onMouseUp);
+    };
+
+    document.addEventListener(`mousemove`, onMouseMove);
+    document.addEventListener(`mouseup`, onMouseUp);
+
     if (evt.which === 1) {
       activatePage();
-      getNewMainPinAddress();
+      window.util.getNewMainPinAddress(mainPinX, mainPinY, MAIN_PIN_HEIGHT_ACTIVE);
     }
   });
 
   mainPin.addEventListener(`keydown`, (evt) => {
     if (evt.key === `Enter`) {
       activatePage();
-      getNewMainPinAddress();
+      window.util.getNewMainPinAddress(mainPinX, mainPinY, MAIN_PIN_HEIGHT_ACTIVE);
     }
   });
 
