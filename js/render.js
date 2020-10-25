@@ -5,6 +5,7 @@
   const map = document.querySelector(`.map`);
   const similarAdElement = map.querySelector(`.map__pins`);
   const pinsContainer = document.createElement(`div`);
+  pinsContainer.classList.add(`pins__container`);
 
   const createAd = (ads) => {
 
@@ -30,7 +31,7 @@
       });
 
       closeCard.addEventListener(`click`, () => {
-        window.card.closePopup(popup);
+        window.util.closePopup(popup);
       });
     }
     pinsContainer.appendChild(fragment);

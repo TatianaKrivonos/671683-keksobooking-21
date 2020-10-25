@@ -6,9 +6,10 @@
   const adFormInputPrice = adForm.querySelector(`input[name = price]`);
   const fragment = document.createDocumentFragment();
 
-  const createOption = (text) => {
+  const createOption = (text, val) => {
     const option = document.createElement(`option`);
     option.textContent = text;
+    option.value = val;
     return option;
   };
 
@@ -28,8 +29,8 @@
 
   const renderCapacityList = (roomsNum) => {
     adFormSelectCapacity.innerHTML = ``;
-    capacityMap[roomsNum].forEach((el) => {
-      fragment.appendChild(createOption(el));
+    capacityMap[roomsNum].forEach((el, index) => {
+      fragment.appendChild(createOption(el, index + 1));
     });
     adFormSelectCapacity.appendChild(fragment);
   };
