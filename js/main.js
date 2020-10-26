@@ -2,6 +2,8 @@
 (function () {
   const MAIN_PIN_HEIGHT = 65;
   const MAIN_PIN_HEIGHT_ACTIVE = 87;
+  const MAIN_PIN_START_COORDINATE_X = 570;
+  const MAIN_PIN_START_COORDINATE_Y = 375;
   const map = document.querySelector(`.map`);
   const mainPin = map.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
@@ -35,7 +37,7 @@
     window.util.setDisable(adFormFieldsets, true);
     window.util.setDisable(filtersFormSelects, true);
     adForm.reset();
-    window.util.getNewMainPinAddress(mainPinX, mainPinY, MAIN_PIN_HEIGHT);
+    window.util.getNewMainPinAddress(MAIN_PIN_START_COORDINATE_X, MAIN_PIN_START_COORDINATE_Y, MAIN_PIN_HEIGHT);
   };
 
   window.util.setDisable(adFormFieldsets, true);
