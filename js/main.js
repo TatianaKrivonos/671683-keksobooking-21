@@ -38,6 +38,8 @@
     window.util.setDisable(filtersFormSelects, true);
     adForm.reset();
     window.util.getNewMainPinAddress(MAIN_PIN_START_COORDINATE_X, MAIN_PIN_START_COORDINATE_Y, MAIN_PIN_HEIGHT);
+    mainPin.style.left = MAIN_PIN_START_COORDINATE_X + `px`;
+    mainPin.style.top = MAIN_PIN_START_COORDINATE_Y + `px`;
   };
 
   window.util.setDisable(adFormFieldsets, true);
