@@ -2,6 +2,8 @@
 (function () {
   const MAIN_PIN_HEIGHT = 65;
   const MAIN_PIN_HEIGHT_ACTIVE = 87;
+  const MAIN_PIN_START_COORDINATE_X = 570;
+  const MAIN_PIN_START_COORDINATE_Y = 375;
   const map = document.querySelector(`.map`);
   const mainPin = map.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
@@ -11,9 +13,12 @@
   const adFormSelectTypes = adForm.querySelector(`select[name = type]`);
   const adFormSelectTimeIn = adForm.querySelector(`select[name = timein]`);
   const adFormSelectTimeOut = adForm.querySelector(`select[name = timeout]`);
+  const resetBtn = adForm.querySelector(`.ad-form__reset`);
   const filtersForm = document.querySelector(`.map__filters`);
   const filtersFormSelects = filtersForm.querySelectorAll(`select`);
   const housingTypeSelector = filtersForm.querySelector(`select[name = housing-type]`);
+  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+  const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   let mainPinX = mainPin.offsetLeft;
   let mainPinY = mainPin.offsetTop;
 
@@ -23,6 +28,18 @@
     window.util.setDisable(adFormFieldsets, false);
     window.util.setDisable(filtersFormSelects, false);
     window.load.getData(onSuccess, onError);
+  };
+
+  const unActivatePage = () => {
+    map.classList.add(`map--faded`);
+    map.querySelector(`.pins__container`).innerHTML = ``;
+    adForm.classList.add(`ad-form--disabled`);
+    window.util.setDisable(adFormFieldsets, true);
+    window.util.setDisable(filtersFormSelects, true);
+    adForm.reset();
+    window.util.getNewMainPinAddress(MAIN_PIN_START_COORDINATE_X, MAIN_PIN_START_COORDINATE_Y, MAIN_PIN_HEIGHT);
+    mainPin.style.left = MAIN_PIN_START_COORDINATE_X + `px`;
+    mainPin.style.top = MAIN_PIN_START_COORDINATE_Y + `px`;
   };
 
   window.util.setDisable(adFormFieldsets, true);
@@ -80,6 +97,11 @@
     }
   });
 
+  adForm.addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    window.upload.sendData(new FormData(adForm), onSuccessSend, onErrorSend);
+  });
+
   adFormSelectRooms.addEventListener(`change`, (evt) => {
     const options = evt.target.options;
     const selectedValue = options[options.selectedIndex].value;
@@ -108,6 +130,10 @@
     window.form.synchronizeSelects(adFormSelectTimeIn, selectedValue);
   });
 
+  resetBtn.addEventListener(`click`, () => {
+    unActivatePage();
+  });
+
   let housingType = `any`;
   let ads = [];
 
@@ -128,7 +154,7 @@
     updateAds();
     const popup = document.querySelector(`.map__card`);
     if (popup) {
-      window.card.closePopup(popup);
+      window.util.closePopup(popup);
     }
   });
 
@@ -146,6 +172,24 @@
     node.style.fontSize = `28px`;
     node.textContent = errorMessage;
     document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+
+  const onSuccessSend = () => {
+    document.body.insertAdjacentElement(`afterbegin`, successTemplate);
+    document.addEventListener(`keydown`, window.util.createEscHandler(document.querySelector(`.success`)));
+    unActivatePage();
+  };
+
+  const onErrorSend = () => {
+    const main = document.querySelector(`main`);
+    main.insertAdjacentElement(`afterbegin`, errorTemplate);
+    const errorBlock = document.querySelector(`.error`);
+    document.addEventListener(`keydown`, window.util.createEscHandler(errorBlock));
+    if (errorBlock) {
+      errorBlock.addEventListener(`click`, () => {
+        errorBlock.remove();
+      });
+    }
   };
 
 })();

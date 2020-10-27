@@ -15,8 +15,25 @@
     adFormInputAddress.value = `${x + Math.floor(MAIN_PIN_WIDTH / 2)}, ${y + height}`;
   };
 
+  const createEscHandler = (popup) => {
+    const onPopupEscPress = (evt) => {
+      if (evt.key === `Escape`) {
+        evt.preventDefault();
+        closePopup(popup);
+        document.removeEventListener(`keydown`, onPopupEscPress);
+      }
+    };
+    return onPopupEscPress;
+  };
+
+  const closePopup = (popup) => {
+    popup.remove();
+  };
+
   window.util = {
     setDisable,
-    getNewMainPinAddress
+    getNewMainPinAddress,
+    closePopup,
+    createEscHandler
   };
 })();
