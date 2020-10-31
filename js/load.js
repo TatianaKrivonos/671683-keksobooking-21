@@ -1,5 +1,5 @@
 'use strict';
-const URL = `https://21.javascript.pages.academy/keksobooking/data`;
+const LOAD_URL = `https://21.javascript.pages.academy/keksobooking/data`;
 const StatusCode = {
   OK: 200
 };
@@ -25,7 +25,7 @@ const getData = (onSuccess, onError) => {
 
   xhr.timeout = TIMEOUT_IN_MS;
 
-  xhr.open(`GET`, URL);
+  xhr.open(`GET`, LOAD_URL);
   xhr.send();
 };
 

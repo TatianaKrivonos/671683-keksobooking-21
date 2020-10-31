@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use strict';
 const filtersForm = document.querySelector(`.map__filters`);
 const housingTypeSelector = filtersForm.querySelector(`select[name = housing-type]`);

@@ -1,5 +1,5 @@
 'use strict';
-const URL = `https://21.javascript.pages.academy/keksobooking`;
+const UPLOAD_URL = `https://21.javascript.pages.academy/keksobooking`;
 const StatusCode = {
   OK: 200
 };
@@ -19,7 +19,7 @@ const sendData = (data, onSuccessSend, onErrorSend) => {
     onErrorSend();
   });
 
-  xhr.open(`POST`, URL);
+  xhr.open(`POST`, UPLOAD_URL);
   xhr.send(data);
 };
 
