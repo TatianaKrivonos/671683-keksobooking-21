@@ -8,6 +8,8 @@ module.exports = {
     "./js/card.js",
     "./js/pin.js",
     "./js/render.js",
+    "./js/filter.js",
+    "./js/debounce.js",
     "./js/move.js",
     "./js/form.js",
     "./js/main.js"

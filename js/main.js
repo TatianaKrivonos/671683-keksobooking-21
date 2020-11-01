@@ -15,7 +15,6 @@ const adFormSelectTimeOut = adForm.querySelector(`select[name = timeout]`);
 const resetBtn = adForm.querySelector(`.ad-form__reset`);
 const filtersForm = document.querySelector(`.map__filters`);
 const filtersFormSelects = filtersForm.querySelectorAll(`select`);
-const housingTypeSelector = filtersForm.querySelector(`select[name = housing-type]`);
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
 let mainPinX = mainPin.offsetLeft;
@@ -134,28 +133,99 @@ resetBtn.addEventListener(`click`, () => {
 });
 
 let housingType = `any`;
+let housingPrice = `any`;
+let housingRooms = `any`;
+let housingGuests = `any`;
+let housingFeatures = [];
 let ads = [];
 
-const updateAds = () => {
-  const sameHousingTypes = ads.filter((ad) => {
-    return ad.offer.type === housingType;
-  });
-  const filteredAds = sameHousingTypes.concat(ads);
-  const uniqueAds = filteredAds.filter((ad, index) => {
-    return filteredAds.indexOf(ad) === index;
-  });
-  window.render.createAd(uniqueAds);
+const priceMap = {
+  "any": (price) => price > 0,
+  "middle": (price) => (price > 10000 && price < 50000),
+  "low": (price) => price < 10000,
+  "high": (price) => price > 50000
 };
 
-housingTypeSelector.addEventListener(`change`, () => {
-  const newHousingType = housingTypeSelector.value;
-  housingType = newHousingType;
-  updateAds();
-  const popup = document.querySelector(`.map__card`);
-  if (popup) {
-    window.util.closePopup(popup);
+const roomsMap = {
+  "any": (rooms) => rooms > 0,
+  "1": (rooms) => rooms === 1,
+  "2": (rooms) => rooms === 2,
+  "3": (rooms) => rooms === 3
+};
+
+const guestsMap = {
+  "any": (guests) => guests > 0,
+  "1": (guests) => guests === 1,
+  "2": (guests) => guests === 2,
+  "0": (guests) => guests === 0
+};
+
+const getRank = (ad) => {
+  const features = ad.offer.features;
+  let rank = 0;
+  if (ad.offer.type === housingType) {
+    rank += 5;
   }
-});
+  if (priceMap[housingPrice](ad.offer.price)) {
+    rank += 4;
+  }
+  if (roomsMap[housingRooms](ad.offer.rooms)) {
+    rank += 3;
+  }
+  if (guestsMap[housingGuests](ad.offer.guests)) {
+    rank += 2;
+  }
+  if (housingFeatures.some((el) => features.includes(el))) {
+    rank += 1;
+  }
+
+  return rank;
+};
+
+const arrsComparator = (arr1, arr2) => {
+  if (arr1.length > arr2.length) {
+    return 1;
+  } else if (arr1.length < arr2.length) {
+    return -1;
+  } else {
+    return 0;
+  }
+};
+
+const updateAds = () => {
+  window.render.createAd(ads.sort((left, right) => {
+    let rankDiff = getRank(right) - getRank(left);
+    if (rankDiff === 0) {
+      rankDiff = arrsComparator(left.offer.features, right.offer.features);
+    }
+    return rankDiff;
+  }));
+};
+
+window.filter.setHousingTypeHandler(window.debounce.setClickInterval((type) => {
+  housingType = type;
+  updateAds();
+}));
+
+window.filter.setHousingPriceHandler(window.debounce.setClickInterval((price) => {
+  housingPrice = price;
+  updateAds();
+}));
+
+window.filter.setHousingRoomsHandler(window.debounce.setClickInterval((rooms) => {
+  housingRooms = rooms;
+  updateAds();
+}));
+
+window.filter.setHousingGuestsHandler(window.debounce.setClickInterval((guests) => {
+  housingGuests = guests;
+  updateAds();
+}));
+
+window.filter.setHousingFeaturesHandler(window.debounce.setClickInterval((features) => {
+  housingFeatures = features;
+  updateAds();
+}));
 
 const onSuccess = (data) => {
   ads = data;
