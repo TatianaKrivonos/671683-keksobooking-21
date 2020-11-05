@@ -4,18 +4,18 @@ const adFormSelectCapacity = adForm.querySelector(`select[name = capacity]`);
 const adFormInputPrice = adForm.querySelector(`input[name = price]`);
 const fragment = document.createDocumentFragment();
 
-const createOption = (text, val) => {
-  const option = document.createElement(`option`);
-  option.textContent = text;
-  option.value = val;
-  return option;
-};
-
 const capacityMap = {
+  100: [`не для гостей`],
   1: [`для 1 гостя`],
   2: [`для 1 гостя`, `для 2 гостей`],
   3: [`для 1 гостя`, `для 2 гостей`, `для 3 гостей`],
-  100: [`не для гостей`]
+};
+
+const valueMap = {
+  "не для гостей": 0,
+  "для 1 гостя": 1,
+  "для 2 гостей": 2,
+  "для 3 гостей": 3
 };
 
 const priceMap = {
@@ -25,10 +25,17 @@ const priceMap = {
   "palace": 10000
 };
 
+const createOption = (text) => {
+  const option = document.createElement(`option`);
+  option.textContent = text;
+  option.value = valueMap[text];
+  return option;
+};
+
 const renderCapacityList = (roomsNum) => {
   adFormSelectCapacity.innerHTML = ``;
-  capacityMap[roomsNum].forEach((el, index) => {
-    fragment.appendChild(createOption(el, index + 1));
+  capacityMap[roomsNum].forEach((el) => {
+    fragment.appendChild(createOption(el));
   });
   adFormSelectCapacity.appendChild(fragment);
 };

@@ -3,10 +3,10 @@ const MAIN_PIN_HEIGHT_ACTIVE = 87;
 const map = document.querySelector(`.map`);
 const mainPin = map.querySelector(`.map__pin--main`);
 const mapLimits = {
-  top: 130,
-  right: map.offsetWidth - (mainPin.clientWidth / 2),
-  left: -(mainPin.clientWidth / 2),
-  bottom: 630,
+  top: 130 - MAIN_PIN_HEIGHT_ACTIVE,
+  right: map.offsetWidth - Math.floor(mainPin.clientWidth / 2),
+  left: -Math.floor(mainPin.clientWidth / 2),
+  bottom: 630 - MAIN_PIN_HEIGHT_ACTIVE,
 };
 
 const relocate = (newLocation) => {

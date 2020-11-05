@@ -17,6 +17,8 @@ const filtersForm = document.querySelector(`.map__filters`);
 const filtersFormSelects = filtersForm.querySelectorAll(`select`);
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
+const avatarPreview = adForm.querySelector(`.ad-form-header__preview img`);
+const housePhotoPreview = adForm.querySelector(`.ad-form__photo img`);
 let mainPinX = mainPin.offsetLeft;
 let mainPinY = mainPin.offsetTop;
 
@@ -35,9 +37,13 @@ const unActivatePage = () => {
   window.util.setDisable(adFormFieldsets, true);
   window.util.setDisable(filtersFormSelects, true);
   adForm.reset();
+  window.form.getPrice(adFormSelectTypes.value);
+  window.form.renderCapacityList(adFormSelectRooms.value);
   window.util.getNewMainPinAddress(MAIN_PIN_START_COORDINATE_X, MAIN_PIN_START_COORDINATE_Y, MAIN_PIN_HEIGHT);
   mainPin.style.left = MAIN_PIN_START_COORDINATE_X + `px`;
   mainPin.style.top = MAIN_PIN_START_COORDINATE_Y + `px`;
+  avatarPreview.src = `img/muffin-grey.svg`;
+  housePhotoPreview.src = `img/muffin-grey.svg`;
 };
 
 window.util.setDisable(adFormFieldsets, true);
