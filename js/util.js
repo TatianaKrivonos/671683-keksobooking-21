@@ -1,8 +1,9 @@
 'use strict';
 const MAIN_PIN_WIDTH = 65;
 
-const adForm = document.querySelector(`.ad-form`);
-const adFormInputAddress = adForm.querySelector(`input[name = address]`);
+const adFormInputAddress = window.global.adForm.querySelector(`input[name = address]`);
+
+const isEnter = (evt) => evt.key === `Enter`;
 
 const setDisable = (arr, boolean) => {
   arr.forEach((el) => {
@@ -14,24 +15,8 @@ const getNewMainPinAddress = (x, y, height) => {
   adFormInputAddress.value = `${x + Math.floor(MAIN_PIN_WIDTH / 2)}, ${y + height}`;
 };
 
-const createEscHandler = (popup) => {
-  const onPopupEscPress = (evt) => {
-    if (evt.key === `Escape`) {
-      evt.preventDefault();
-      closePopup(popup);
-      document.removeEventListener(`keydown`, onPopupEscPress);
-    }
-  };
-  return onPopupEscPress;
-};
-
-const closePopup = (popup) => {
-  popup.remove();
-};
-
 window.util = {
+  isEnter,
   setDisable,
   getNewMainPinAddress,
-  closePopup,
-  createEscHandler
 };

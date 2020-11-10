@@ -1,7 +1,6 @@
 'use strict';
-const adForm = document.querySelector(`.ad-form`);
-const adFormSelectCapacity = adForm.querySelector(`select[name = capacity]`);
-const adFormInputPrice = adForm.querySelector(`input[name = price]`);
+const adFormSelectCapacity = window.global.adForm.querySelector(`select[name = capacity]`);
+const adFormInputPrice = window.global.adForm.querySelector(`input[name = price]`);
 const fragment = document.createDocumentFragment();
 
 const capacityMap = {

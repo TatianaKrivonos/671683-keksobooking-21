@@ -6,7 +6,7 @@ const similarAdTemplate = document.querySelector(`#pin`).content.querySelector(`
 
 const renderAd = (ad) => {
   const adElement = similarAdTemplate.cloneNode(true);
-  adElement.style = `left: ${ad.location.x + PIN_WIDTH}px; top: ${ad.location.y + PIN_HEIGHT}px;`;
+  adElement.style = `left: ${ad.location.x - Math.floor(PIN_WIDTH / 2)}px; top: ${ad.location.y - PIN_HEIGHT}px;`;
 
   const adImg = adElement.querySelector(`img`);
   adImg.src = ad.author.avatar;

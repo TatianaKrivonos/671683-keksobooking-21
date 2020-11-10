@@ -1,42 +1,57 @@
 'use strict';
 const MAIN_PIN_HEIGHT = 65;
-const MAIN_PIN_HEIGHT_ACTIVE = 87;
+const MAIN_PIN_HEIGHT_ACTIVE = 80;
 const MAIN_PIN_START_COORDINATE_X = 570;
 const MAIN_PIN_START_COORDINATE_Y = 375;
-const map = document.querySelector(`.map`);
-const mainPin = map.querySelector(`.map__pin--main`);
-const adForm = document.querySelector(`.ad-form`);
-const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
-const adFormInputTitle = adForm.querySelector(`input[name = title]`);
-const adFormSelectRooms = adForm.querySelector(`select[name = rooms]`);
-const adFormSelectTypes = adForm.querySelector(`select[name = type]`);
-const adFormSelectTimeIn = adForm.querySelector(`select[name = timein]`);
-const adFormSelectTimeOut = adForm.querySelector(`select[name = timeout]`);
-const resetBtn = adForm.querySelector(`.ad-form__reset`);
-const filtersForm = document.querySelector(`.map__filters`);
-const filtersFormSelects = filtersForm.querySelectorAll(`select`);
+const mainPin = window.global.map.querySelector(`.map__pin--main`);
+const adFormFieldsets = window.global.adForm.querySelectorAll(`fieldset`);
+const adFormInputTitle = window.global.adForm.querySelector(`input[name = title]`);
+const adFormSelectRooms = window.global.adForm.querySelector(`select[name = rooms]`);
+const adFormSelectTypes = window.global.adForm.querySelector(`select[name = type]`);
+const adFormSelectTimeIn = window.global.adForm.querySelector(`select[name = timein]`);
+const adFormSelectTimeOut = window.global.adForm.querySelector(`select[name = timeout]`);
+const resetBtn = window.global.adForm.querySelector(`.ad-form__reset`);
+const filtersFormSelects = window.global.filtersForm.querySelectorAll(`select`);
 const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
-const avatarPreview = adForm.querySelector(`.ad-form-header__preview img`);
-const housePhotoPreview = adForm.querySelector(`.ad-form__photo img`);
+const avatarPreview = window.global.adForm.querySelector(`.ad-form-header__preview img`);
+const housePhotoPreview = window.global.adForm.querySelector(`.ad-form__photo img`);
+const priceMap = {
+  "any": (price) => price > 0,
+  "middle": (price) => (price >= 10000 && price < 50000),
+  "low": (price) => price < 10000,
+  "high": (price) => price > 50000
+};
+const roomsMap = {
+  "any": (rooms) => rooms >= 0,
+  "1": (rooms) => rooms === 1,
+  "2": (rooms) => rooms === 2,
+  "3": (rooms) => rooms === 3
+};
+const guestsMap = {
+  "any": (guests) => guests >= 0,
+  "1": (guests) => guests === 1,
+  "2": (guests) => guests === 2,
+  "0": (guests) => guests === 0
+};
 let mainPinX = mainPin.offsetLeft;
 let mainPinY = mainPin.offsetTop;
 
 const activatePage = () => {
-  map.classList.remove(`map--faded`);
-  adForm.classList.remove(`ad-form--disabled`);
+  window.global.map.classList.remove(`map--faded`);
+  window.global.adForm.classList.remove(`ad-form--disabled`);
   window.util.setDisable(adFormFieldsets, false);
   window.util.setDisable(filtersFormSelects, false);
   window.load.getData(onSuccess, onError);
 };
 
 const unActivatePage = () => {
-  map.classList.add(`map--faded`);
-  map.querySelector(`.pins__container`).innerHTML = ``;
-  adForm.classList.add(`ad-form--disabled`);
+  window.global.map.classList.add(`map--faded`);
+  window.global.map.querySelector(`.pins__container`).innerHTML = ``;
+  window.global.adForm.classList.add(`ad-form--disabled`);
   window.util.setDisable(adFormFieldsets, true);
   window.util.setDisable(filtersFormSelects, true);
-  adForm.reset();
+  window.global.adForm.reset();
   window.form.getPrice(adFormSelectTypes.value);
   window.form.renderCapacityList(adFormSelectRooms.value);
   window.util.getNewMainPinAddress(MAIN_PIN_START_COORDINATE_X, MAIN_PIN_START_COORDINATE_Y, MAIN_PIN_HEIGHT);
@@ -81,11 +96,11 @@ mainPin.addEventListener(`mousedown`, (evt) => {
   const onMouseUp = (upEvt) => {
     upEvt.preventDefault();
     onMouseMove(upEvt);
-    document.removeEventListener(`mousemove`, onMouseMove);
+    window.global.map.removeEventListener(`mousemove`, onMouseMove);
     document.removeEventListener(`mouseup`, onMouseUp);
   };
 
-  document.addEventListener(`mousemove`, onMouseMove);
+  window.global.map.addEventListener(`mousemove`, onMouseMove);
   document.addEventListener(`mouseup`, onMouseUp);
 
   if (evt.which === 1) {
@@ -95,15 +110,15 @@ mainPin.addEventListener(`mousedown`, (evt) => {
 });
 
 mainPin.addEventListener(`keydown`, (evt) => {
-  if (evt.key === `Enter`) {
+  if (window.util.isEnter(evt)) {
     activatePage();
     window.util.getNewMainPinAddress(mainPinX, mainPinY, MAIN_PIN_HEIGHT_ACTIVE);
   }
 });
 
-adForm.addEventListener(`submit`, (evt) => {
+window.global.adForm.addEventListener(`submit`, (evt) => {
   evt.preventDefault();
-  window.upload.sendData(new FormData(adForm), onSuccessSend, onErrorSend);
+  window.upload.sendData(new FormData(window.global.adForm), onSuccessSend, onErrorSend);
 });
 
 adFormSelectRooms.addEventListener(`change`, (evt) => {
@@ -145,27 +160,6 @@ let housingGuests = `any`;
 let housingFeatures = [];
 let ads = [];
 
-const priceMap = {
-  "any": (price) => price > 0,
-  "middle": (price) => (price > 10000 && price < 50000),
-  "low": (price) => price < 10000,
-  "high": (price) => price > 50000
-};
-
-const roomsMap = {
-  "any": (rooms) => rooms > 0,
-  "1": (rooms) => rooms === 1,
-  "2": (rooms) => rooms === 2,
-  "3": (rooms) => rooms === 3
-};
-
-const guestsMap = {
-  "any": (guests) => guests > 0,
-  "1": (guests) => guests === 1,
-  "2": (guests) => guests === 2,
-  "0": (guests) => guests === 0
-};
-
 const getRank = (ad) => {
   const features = ad.offer.features;
   let rank = 0;
@@ -181,10 +175,11 @@ const getRank = (ad) => {
   if (guestsMap[housingGuests](ad.offer.guests)) {
     rank += 2;
   }
-  if (housingFeatures.some((el) => features.includes(el))) {
-    rank += 1;
-  }
-
+  housingFeatures.forEach((el) => {
+    if (features.includes(el)) {
+      rank += 1;
+    }
+  });
   return rank;
 };
 
@@ -249,9 +244,24 @@ const onError = (errorMessage) => {
   document.body.insertAdjacentElement(`afterbegin`, node);
 };
 
+const showMessageAfterSubmit = (message) => {
+  const onMessageClose = createCloseMessageHandler(message);
+  document.addEventListener(`keydown`, onMessageClose);
+  message.addEventListener(`click`, onMessageClose);
+};
+
+const createCloseMessageHandler = (message) => {
+  const onClose = () => {
+    document.removeEventListener(`keydown`, onClose);
+    message.remove();
+  };
+  return onClose;
+};
+
 const onSuccessSend = () => {
   document.body.insertAdjacentElement(`afterbegin`, successTemplate);
-  document.addEventListener(`keydown`, window.util.createEscHandler(document.querySelector(`.success`)));
+  const successBlock = document.querySelector(`.success`);
+  showMessageAfterSubmit(successBlock);
   unActivatePage();
 };
 
@@ -259,10 +269,5 @@ const onErrorSend = () => {
   const main = document.querySelector(`main`);
   main.insertAdjacentElement(`afterbegin`, errorTemplate);
   const errorBlock = document.querySelector(`.error`);
-  document.addEventListener(`keydown`, window.util.createEscHandler(errorBlock));
-  if (errorBlock) {
-    errorBlock.addEventListener(`click`, () => {
-      errorBlock.remove();
-    });
-  }
+  showMessageAfterSubmit(errorBlock);
 };

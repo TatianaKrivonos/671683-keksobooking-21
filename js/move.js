@@ -1,10 +1,9 @@
 'use strict';
-const MAIN_PIN_HEIGHT_ACTIVE = 87;
-const map = document.querySelector(`.map`);
-const mainPin = map.querySelector(`.map__pin--main`);
+const MAIN_PIN_HEIGHT_ACTIVE = 80;
+const mainPin = window.global.map.querySelector(`.map__pin--main`);
 const mapLimits = {
   top: 130 - MAIN_PIN_HEIGHT_ACTIVE,
-  right: map.offsetWidth - Math.floor(mainPin.clientWidth / 2),
+  right: window.global.map.offsetWidth - Math.floor(mainPin.clientWidth / 2),
   left: -Math.floor(mainPin.clientWidth / 2),
   bottom: 630 - MAIN_PIN_HEIGHT_ACTIVE,
 };
