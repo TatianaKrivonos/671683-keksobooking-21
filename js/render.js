@@ -1,41 +1,58 @@
 'use strict';
 const MAX_SIMILAR_AD_COUNT = 5;
 const fragment = document.createDocumentFragment();
-const map = document.querySelector(`.map`);
-const similarAdElement = map.querySelector(`.map__pins`);
 const pinsContainer = document.createElement(`div`);
 pinsContainer.classList.add(`pins__container`);
 
-const createAd = (ads) => {
+let popup = null;
+let activePin = null;
 
-  const takeNumber = ads.length > MAX_SIMILAR_AD_COUNT
-    ? MAX_SIMILAR_AD_COUNT
-    : ads.length;
+const onActivatePin = (pin, ad) => {
+  pin.classList.add(`map__pin--active`);
+  activePin = pin;
+
+  if (popup) {
+    popup.close();
+  }
+  popup = window.card.openPopup(ad);
+  popup.closed(() => {
+    pin.classList.remove(`map__pin--active`);
+    activePin = null;
+  });
+};
+
+const createAd = (ads) => {
+  const takeNumber = Math.min(ads.length, MAX_SIMILAR_AD_COUNT);
 
   pinsContainer.innerHTML = ``;
 
   for (let i = 0; i < takeNumber; i++) {
     const pin = window.pin.renderAd(ads[i]);
-    const popup = window.card.renderAdPopup(ads[i]);
-    const closeCard = popup.querySelector(`.popup__close`);
     fragment.appendChild(pin);
+
     pin.addEventListener(`click`, () => {
-      window.card.openPopup(popup);
+      onActivatePin(pin, ads[i]);
     });
 
     pin.addEventListener(`keydown`, (evt) => {
-      if (evt.key === `Enter`) {
-        window.card.openPopup(popup);
+      if (window.util.isEnter(evt)) {
+        onActivatePin(pin, ads[i]);
       }
-    });
-
-    closeCard.addEventListener(`click`, () => {
-      window.util.closePopup(popup);
     });
   }
   pinsContainer.appendChild(fragment);
-  similarAdElement.appendChild(pinsContainer);
+  window.global.similarAdElement.appendChild(pinsContainer);
 };
+
+window.global.filtersForm.addEventListener(`change`, () => {
+  if (popup) {
+    popup.close();
+    if (activePin) {
+      activePin.classList.remove(`map__pin--active`);
+      activePin = null;
+    }
+  }
+});
 
 window.render = {
   createAd,

@@ -2,6 +2,7 @@ const path = require(`path`);
 
 module.exports = {
   entry: [
+    "./js/global.js",
     "./js/util.js",
     "./js/upload.js",
     "./js/load.js",
