@@ -40,7 +40,7 @@ housingFeaturesInputs.forEach((checkBox) => {
     if (checkBox.checked) {
       newHousingFeatures.push(checkBox.value);
     } else {
-      const index = newHousingFeatures.indexOf(checkBox);
+      const index = newHousingFeatures.indexOf(checkBox.value);
       newHousingFeatures.splice(index, 1);
     }
     ad.onHousingFeaturesChange(newHousingFeatures);
