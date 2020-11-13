@@ -48,11 +48,12 @@ const renderAdPopup = (ad) => {
 
 const openPopup = (ad) => {
   const popup = renderAdPopup(ad);
+  const closeBtn = popup.querySelector(`.popup__close`);
   fragment.appendChild(popup);
   window.global.map.insertBefore(fragment, mapFiltersContainer);
   const onPopupClose = createClosePopupHandler(popup);
   document.addEventListener(`keydown`, onPopupClose);
-  popup.addEventListener(`click`, onPopupClose);
+  closeBtn.addEventListener(`click`, onPopupClose);
 
   return {
     closed: (cb) => closedCbs.push(cb),

@@ -160,47 +160,37 @@ let housingGuests = `any`;
 let housingFeatures = [];
 let ads = [];
 
-const getRank = (ad) => {
-  const features = ad.offer.features;
-  let rank = 0;
-  if (ad.offer.type === housingType) {
-    rank += 5;
-  }
-  if (priceMap[housingPrice](ad.offer.price)) {
-    rank += 4;
-  }
-  if (roomsMap[housingRooms](ad.offer.rooms)) {
-    rank += 3;
-  }
-  if (guestsMap[housingGuests](ad.offer.guests)) {
-    rank += 2;
-  }
-  housingFeatures.forEach((el) => {
-    if (features.includes(el)) {
-      rank += 1;
-    }
-  });
-  return rank;
-};
-
-const arrsComparator = (arr1, arr2) => {
-  if (arr1.length > arr2.length) {
-    return 1;
-  } else if (arr1.length < arr2.length) {
-    return -1;
-  } else {
-    return 0;
-  }
-};
-
 const updateAds = () => {
-  window.render.createAd(ads.sort((left, right) => {
-    let rankDiff = getRank(right) - getRank(left);
-    if (rankDiff === 0) {
-      rankDiff = arrsComparator(left.offer.features, right.offer.features);
-    }
-    return rankDiff;
-  }));
+
+  const typeFilter = (ad) => {
+    return ad.offer.type === housingType || housingType === `any`;
+  };
+
+  const priceFilter = (ad) => {
+    return priceMap[housingPrice](ad.offer.price) || housingPrice === `any`;
+  };
+
+  const roomsFilter = (ad) => {
+    return roomsMap[housingRooms](ad.offer.rooms) || housingRooms === `any`;
+  };
+
+  const guestsFilter = (ad) => {
+    return guestsMap[housingGuests](ad.offer.guests) || housingGuests === `any`;
+  };
+
+  const featuresFilter = (ad) => {
+    const features = ad.offer.features;
+    return housingFeatures.every((el) => features.includes(el)) || housingFeatures.length === 0;
+  };
+
+  const filteredAds = ads
+    .filter(typeFilter)
+    .filter(priceFilter)
+    .filter(roomsFilter)
+    .filter(guestsFilter)
+    .filter(featuresFilter);
+
+  window.render.createAd(filteredAds);
 };
 
 window.filter.setHousingTypeHandler(window.debounce.setClickInterval((type) => {
